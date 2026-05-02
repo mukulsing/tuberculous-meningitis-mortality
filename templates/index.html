@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>TBM Mortality Predictor</title>
+<style>
+body { font-family: Arial; margin: 40px; }
+input { margin: 5px; padding: 8px; width: 250px; }
+button { padding: 10px; }
+</style>
+</head>
+<body>
+
+<h2>TBM Mortality Prediction</h2>
+
+<input placeholder="GCS Score" id="gcs"><br>
+<input placeholder="Hydrocephalus (0/1)" id="hydro"><br>
+<input placeholder="Age" id="age"><br>
+<input placeholder="CSF Glucose" id="csf"><br>
+<input placeholder="Infarction (0/1)" id="inf"><br>
+
+<h3>Optional</h3>
+<input placeholder="Duration" id="dur"><br>
+<input placeholder="Seizures (0/1)" id="sei"><br>
+<input placeholder="Consciousness (0/1)" id="con"><br>
+<input placeholder="Steroids (0/1)" id="ste"><br>
+
+<button onclick="predict()">Predict</button>
+
+<h3 id="result"></h3>
+
+<script>
+function predict(){
+fetch('/predict',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body: JSON.stringify({
+gcs: document.getElementById('gcs').value,
+hydrocephalus: document.getElementById('hydro').value,
+age: document.getElementById('age').value,
+csf_glucose: document.getElementById('csf').value,
+infarction: document.getElementById('inf').value,
+duration: document.getElementById('dur').value,
+seizures: document.getElementById('sei').value,
+consciousness: document.getElementById('con').value,
+steroids: document.getElementById('ste').value
+})
+})
+.then(res=>res.json())
+.then(data=>{
+document.getElementById('result').innerText =
+"Mortality: " + data.mortality + " | Probability: " + data.probability;
+});
+}
+</script>
+
+</body>
+</html>
